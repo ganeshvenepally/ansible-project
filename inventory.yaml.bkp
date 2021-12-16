@@ -1,0 +1,25 @@
+---
+all:
+  children:
+    switches:
+      hosts:
+        sw1:
+          loopback: 10.1.1.1
+        sw2:
+          loopback: 10.2.2.2
+          ntp: ntp.alt.test.com
+    west:
+      hosts:
+        sw1
+      vars:
+        ntp: ntp.west.test.com
+    east:
+      hosts:
+        sw2 
+      vars:
+        ntp: ntp.east.test.com
+  vars:
+    ansible_connection: ansible.netcommon.network_cli
+    ansible_network_os: cisco.nxos.nxos
+    ansible_user: lab
+    ansible_password: Nebula2021
