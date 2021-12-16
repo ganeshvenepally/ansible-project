@@ -1,0 +1,11 @@
+/ansible.cfg
+/ansible.code-workspace
+/ansible_facts.txt
+/collections
+/configured_hostname.txt
+/containerlab_history.txt
+/inventory.yaml
+/spine1-nxos_configured_hostname.txt
+/spine2-nxos_configured_hostname.txt
+/test.txt
+/venv

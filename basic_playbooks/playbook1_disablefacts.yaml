@@ -1,0 +1,15 @@
+---
+- name: Copy test.txt file to Nexus switches via SCP
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name: Enable SCP feature on switches
+      cisco.nxos.nxos_feature:
+        feature: scp-server
+    - name: Copy test.txt file to switches
+      cisco.nxos.nxos_file_copy:
+        local_file: test.txt
+    - name: Disable SCP feature on switches
+      cisco.nxos.nxos_feature:
+        feature: scp-server
+        state: disabled

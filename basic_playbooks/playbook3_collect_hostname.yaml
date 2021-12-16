@@ -1,0 +1,17 @@
+---
+- name: Archive configured hostname to local file
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name: Gather configured hostname
+      cisco.nxos.nxos_command:
+        commands: sh ip ospf neighbors 
+      register: configured_hostname
+    - name: Store configured hostname in a local file
+      ansible.builtin.copy:
+        content: "{{ configured_hostname.stdout[0] }}\n"
+        dest: "{{ inventory_hostname }}_configured_hostname.txt"
+      delegate_to: localhost
+    # - name: Print configured hostname variable
+    #   ansible.builtin.debug:
+    #     var: configured_hostname

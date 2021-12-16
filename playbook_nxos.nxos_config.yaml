@@ -1,0 +1,26 @@
+---
+- name: Configure OSPF
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name : Enable OSPF feature
+      cisco.nxos.nxos_config:
+        lines: feature ospf
+    - name : Enable OSPF process
+      cisco.nxos.nxos_config:
+        lines: router ospf 1
+- name: Configure BGP
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name: Enable BGP feature
+      cisco.nxos.nxos_config:
+        lines: feature bgp
+    - name: Enable bgp process
+      cisco.nxos.nxos_config:
+        lines: router bgp 65535
+    - name: Enable BGP IPV4 unicast address family
+      cisco.nxos.nxos_config:
+        lines: address-family ipv4 unicast
+        parents: router bgp 65535
+        save_when: modified

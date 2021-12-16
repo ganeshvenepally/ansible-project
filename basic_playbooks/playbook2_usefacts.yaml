@@ -1,0 +1,18 @@
+---
+- name: Copy test.txt file to Nexus switches via SCP
+  hosts: switches
+  tasks:
+    - name: Display facts
+      ansible.builtin.debug:
+        var: ansible_facts["net_filesystems"]
+    - name: Enable SCP feature on switches
+      cisco.nxos.nxos_feature:
+        feature: scp-server
+    - name: Copy test.txt file to switches
+      cisco.nxos.nxos_file_copy:
+        local_file: test.txt
+        file_system: "{{ ansible_facts['net_filesystems'][0] }}"
+    - name: Disable SCP feature on switches
+      cisco.nxos.nxos_feature:
+        feature: scp-server
+        state: disabled
