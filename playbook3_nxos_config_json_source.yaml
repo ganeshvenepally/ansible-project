@@ -1,0 +1,22 @@
+---
+- name: Configure Layer 3 interfaces
+  hosts: switches
+  gather_facts: no
+  tasks: 
+    - name: Import JSON data for switches
+      ansible.builtin.set_fact:
+        interface_data: "{{ lookup('file', 'interface_data.json') | from_json }}"
+    - name: Configure physical interfaces as Layer 3 interfaces
+      cisco.nxos.nxos_config:
+        lines: no switchport
+        parents: "interface {{ item.interface }}"
+      when: item.interface is search("Ethernet")
+      with_items: "{{ interface_data ['%s' | format(inventory_hostname)] }}"
+    - name: Configure Layer 3 intefaces on switches
+      cisco.nxos.nxos_config:
+        lines:
+          - "ip address {{ item.ip }}"
+          - "description {{ item.description }}"
+          - "{{ item.status }}"
+        parents: "interface {{ item.interface }}"
+      with_items: "{{ interface_data ['%s' | format(inventory_hostname)] }}"

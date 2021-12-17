@@ -1,0 +1,31 @@
+---
+- name: Configure loopback interface on switches
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name: Create loopback interface
+      cisco.nxos.nxos_config:
+        lines: "ip address {{ loopback }}/32"
+        parents: interface loopback0
+- name: Configure OSPF
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name : Enable OSPF feature
+      cisco.nxos.nxos_config:
+        lines: feature ospf
+    - name : Enable OSPF process
+      cisco.nxos.nxos_config:
+        lines: router ospf 1
+- name: Configure BGP
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name: Enable BGP feature
+      cisco.nxos.nxos_config:
+        lines: feature bgp
+    - name: Enable bgp process with IPv4 unicast address family
+      cisco.nxos.nxos_config:
+        lines: "address-family ipv4 unicast"
+        parents: "router bgp {{ bgp_asn }}" #router bgp 65535
+        save_when: modified
