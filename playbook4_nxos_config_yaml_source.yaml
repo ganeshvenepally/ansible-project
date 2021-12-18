@@ -3,16 +3,15 @@
   hosts: switches
   gather_facts: no
   tasks: 
-    - name: Import JSON data for switches
+    - name: Import YAML data for switches
       ansible.builtin.set_fact:
-        interface_data: "{{ lookup('file', 'interface_data.json') | from_json }}"
+        interface_data: "{{ lookup('file', 'interface_data.yaml') | from_yaml }}"
     - name: Configure physical interfaces as Layer 3 interfaces
       cisco.nxos.nxos_config:
         lines: no switchport
         parents: "interface {{ item.interface }}"
       when: item.interface is search("Ethernet")
-      #Loop across the devices in JSON file which are keys in Dictionary of JSON file.
-      #'%s' is special string will be replaced with interface_data['sw1'] while looping
+      #Loop across the devices in YAML file which are keys in Dictionary of YAML file.
       with_items: "{{ interface_data ['%s' | format(inventory_hostname)] }}"
     - name: Configure Layer 3 intefaces on switches
       cisco.nxos.nxos_config:
@@ -21,5 +20,5 @@
           - "description {{ item.description }}"
           - "{{ item.status }}"
         parents: "interface {{ item.interface }}"
-      #Loop across the devices in JSON file which are keys in Dictionary of JSON file.
+      #Loop across the devices in YAML file which are keys in Dictionary of YAML file.
       with_items: "{{ interface_data ['%s' | format(inventory_hostname)] }}"
