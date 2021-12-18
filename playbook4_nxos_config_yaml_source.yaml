@@ -6,6 +6,8 @@
     - name: Import YAML data for switches
       ansible.builtin.set_fact:
         interface_data: "{{ lookup('file', 'interface_data.yaml') | from_yaml }}"
+      #Enable debugger "always"
+      #debugger: always
     - name: Configure physical interfaces as Layer 3 interfaces
       cisco.nxos.nxos_config:
         lines: no switchport
@@ -22,3 +24,5 @@
         parents: "interface {{ item.interface }}"
       #Loop across the devices in YAML file which are keys in Dictionary of YAML file.
       with_items: "{{ interface_data ['%s' | format(inventory_hostname)] }}"
+      #Enable debugger "on_failed"
+      #debugger: on_failed
